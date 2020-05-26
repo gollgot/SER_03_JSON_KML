@@ -22,35 +22,39 @@ public class KMLGenerator {
     public void generate(){
         try {
             // Le 1er element créer est automatiquement le root element
+            // l'URI est le namespace, pour chaque Element, il faudra donner le meme namespace
+            // que notre element root.
             Element kml = new Element("kml", "http://www.opengis.net/kml/2.2");
             Document JDOM2document = new Document(kml);
 
             // Document
-            Element document = new Element("Document");
+            Element document = new Element("Document", kml.getNamespace());
 
             // Style
-            Element style = new Element("Style");
+            Element style = new Element("Style", kml.getNamespace());
             style.setAttribute(new Attribute("id", "country-style"));
-            style.addContent(new Element("PolyStyle").addContent(new Element("fill").setText("0")));
+            style.addContent(new Element("PolyStyle", kml.getNamespace()).
+                    addContent(new Element("fill", kml.getNamespace())
+                    .setText("0")));
             document.addContent(style);
 
             // Placemark
             for(Country country : countries){
-                Element placeMark = new Element("Placemark");
-                placeMark.addContent(new Element("name").setText(country.getName()));
-                placeMark.addContent(new Element("styleUrl").setText("country-style"));
+                Element placeMark = new Element("Placemark", kml.getNamespace());
+                placeMark.addContent(new Element("name", kml.getNamespace()).setText(country.getName()));
+                placeMark.addContent(new Element("styleUrl", kml.getNamespace()).setText("country-style"));
 
                 Element polygon;
 
                 switch (country.getGeometryType()){
                     case Polygon:
-                        polygon = generatePolygon(country.getOuterBoundariesList().get(0));
+                        polygon = generatePolygon(country.getOuterBoundariesList().get(0), kml);
                         placeMark.addContent(polygon);
                         break;
                     case MultiPolygon:
-                        Element multiGeometry = new Element("MultiGeometry");
+                        Element multiGeometry = new Element("MultiGeometry", kml.getNamespace());
                         for(JSONArray outerBoundary : country.getOuterBoundariesList()){
-                            polygon = generatePolygon(outerBoundary);
+                            polygon = generatePolygon(outerBoundary, kml);
                             multiGeometry.addContent(polygon);
                         }
                         placeMark.addContent(multiGeometry);
@@ -71,15 +75,17 @@ public class KMLGenerator {
         }
     }
 
-    private Element generatePolygon(JSONArray outerBoundaries){
+    private Element generatePolygon(JSONArray outerBoundaries,Element kml){
         Element coordinates =
-                new Element("coordinates").
+                new Element("coordinates", kml.getNamespace()).
                         setText(Utils.convertOuterBoundariesToStringCoordinates(
                                 outerBoundaries)
                         );
-        Element polygon = new Element("Polygon").addContent(new Element("outerBoundaryIs").addContent(new Element("LinearRing").addContent(coordinates)));
 
-        return polygon;
+        return new Element("Polygon", kml.getNamespace())
+                    .addContent(new Element("outerBoundaryIs", kml.getNamespace())
+                    .addContent(new Element("LinearRing", kml.getNamespace())
+                    .addContent(coordinates)));
     }
 
 }
