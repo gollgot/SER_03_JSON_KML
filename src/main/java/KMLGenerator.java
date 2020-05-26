@@ -3,6 +3,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
+import org.json.simple.JSONArray;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,19 +40,20 @@ public class KMLGenerator {
                 placeMark.addContent(new Element("name").setText(country.getName()));
                 placeMark.addContent(new Element("styleUrl").setText("country-style"));
 
+                Element polygon;
 
                 switch (country.getGeometryType()){
                     case Polygon:
-                        Element coordinates =
-                                new Element("coordinates").
-                                        setText(Utils.convertOuterBoundariesToStringCoordinates(
-                                                country.getOuterBoundaries().get(0))
-                                        );
-                        Element polygon = new Element("Polygon").addContent(new Element("outerBoundaryIs").addContent(new Element("LinearRing").addContent(coordinates)));
-
+                        polygon = generatePolygon(country.getOuterBoundariesList().get(0));
                         placeMark.addContent(polygon);
                         break;
                     case MultiPolygon:
+                        Element multiGeometry = new Element("MultiGeometry");
+                        for(JSONArray outerBoundary : country.getOuterBoundariesList()){
+                            polygon = generatePolygon(outerBoundary);
+                            multiGeometry.addContent(polygon);
+                        }
+                        placeMark.addContent(multiGeometry);
                         break;
                 }
 
@@ -67,6 +69,17 @@ public class KMLGenerator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
+
+    private Element generatePolygon(JSONArray outerBoundaries){
+        Element coordinates =
+                new Element("coordinates").
+                        setText(Utils.convertOuterBoundariesToStringCoordinates(
+                                outerBoundaries)
+                        );
+        Element polygon = new Element("Polygon").addContent(new Element("outerBoundaryIs").addContent(new Element("LinearRing").addContent(coordinates)));
+
+        return polygon;
+    }
+
 }

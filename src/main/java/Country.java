@@ -6,17 +6,17 @@ public class Country {
     private String name;
     private String iso3;
     private GeometryType geometryType;
-    private ArrayList<JSONArray> outerBoundaries;
+    private ArrayList<JSONArray> outerBoundariesList;
 
     public Country(String name, String iso3, GeometryType geometryType) {
         this.name = name;
         this.iso3 = iso3;
         this.geometryType = geometryType;
-        outerBoundaries = new ArrayList<>();
+        outerBoundariesList = new ArrayList<>();
     }
 
     public void addCoordinates(JSONArray coordinates) {
-        this.outerBoundaries.add(coordinates);
+        this.outerBoundariesList.add(coordinates);
     }
 
     public String getName() {
@@ -31,8 +31,8 @@ public class Country {
         return geometryType;
     }
 
-    public ArrayList<JSONArray> getOuterBoundaries() {
-        return outerBoundaries;
+    public ArrayList<JSONArray> getOuterBoundariesList() {
+        return outerBoundariesList;
     }
 
 }
