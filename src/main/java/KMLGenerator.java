@@ -8,20 +8,30 @@ import org.json.simple.JSONArray;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class KMLGenerator {
 
     private String outputFile;
     private ArrayList<Country> countries;
 
+    /**
+     * Constructeur prenant le chemin du fichier à créer et une liste de pays en paramètre
+     * @param outputFile le chemin du fichier à créer
+     * @param countries la liste des pays à mettre dans le fichier
+     */
     public KMLGenerator(String outputFile, ArrayList<Country> countries) {
         this.outputFile = outputFile;
         this.countries = countries;
     }
 
+    /**
+     * Génère le fichier kml à partir des pays donnés dans le constructeur
+     */
     public void generate(){
         try {
-            // Le 1er element créer est automatiquement le root element
+            // Le 1er element créé est automatiquement le root element
             // l'URI est le namespace, pour chaque Element, il faudra donner le meme namespace
             // que notre element root.
             Element kml = new Element("kml", "http://www.opengis.net/kml/2.2");
@@ -38,7 +48,7 @@ public class KMLGenerator {
                     .setText("0")));
             document.addContent(style);
 
-            // Placemark
+            // Génère les pays
             for(Country country : countries){
                 Element placeMark = new Element("Placemark", kml.getNamespace());
                 placeMark.addContent(new Element("name", kml.getNamespace()).setText(country.getName()));
@@ -46,6 +56,7 @@ public class KMLGenerator {
 
                 Element polygon;
 
+                //Génère les coordonnées selon le type de géomètrie du pays
                 switch (country.getGeometryType()){
                     case Polygon:
                         polygon = generatePolygon(country.getOuterBoundariesList().get(0), kml);
@@ -53,6 +64,7 @@ public class KMLGenerator {
                         break;
                     case MultiPolygon:
                         Element multiGeometry = new Element("MultiGeometry", kml.getNamespace());
+                        //génère
                         for(JSONArray outerBoundary : country.getOuterBoundariesList()){
                             polygon = generatePolygon(outerBoundary, kml);
                             multiGeometry.addContent(polygon);
@@ -60,7 +72,6 @@ public class KMLGenerator {
                         placeMark.addContent(multiGeometry);
                         break;
                 }
-
                 document.addContent(placeMark);
             }
 
@@ -74,6 +85,7 @@ public class KMLGenerator {
             e.printStackTrace();
         }
     }
+
 
     private Element generatePolygon(JSONArray outerBoundaries,Element kml){
         Element coordinates =
