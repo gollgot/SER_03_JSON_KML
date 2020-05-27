@@ -29,7 +29,7 @@ public class KMLGenerator {
     /**
      * Génère le fichier kml à partir des pays donnés dans le constructeur
      */
-    public void generate(){
+    public void generateOutput(){
         try {
             // Le 1er element créé est automatiquement le root element
             // l'URI est le namespace, pour chaque Element, il faudra donner le meme namespace

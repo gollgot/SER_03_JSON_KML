@@ -1,5 +1,3 @@
-import org.json.simple.JSONArray;
-
 import java.util.ArrayList;
 
 public class Main {
@@ -15,7 +13,7 @@ public class Main {
 
         //exporte les pays dans un fichier KML
         KMLGenerator kmlGenerator = new KMLGenerator(OUTPUT_FILE, countries);
-        kmlGenerator.generate();
+        kmlGenerator.generateOutput();
     }
 
 }
