@@ -1,3 +1,9 @@
+/*
+ * Auteurs: Loïc Dessaules & Gildas Houlmann
+ * Fichier: Country.java
+ * Date: 29.05.2020
+ */
+
 import org.json.simple.JSONArray;
 
 import java.util.ArrayList;

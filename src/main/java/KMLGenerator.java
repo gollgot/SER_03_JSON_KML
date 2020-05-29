@@ -1,3 +1,9 @@
+/*
+ * Auteurs: Loïc Dessaules & Gildas Houlmann
+ * Fichier: KMLGenerator.java
+ * Date: 29.05.2020
+ */
+
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -85,8 +91,7 @@ public class KMLGenerator {
             e.printStackTrace();
         }
     }
-
-
+    
     private Element generatePolygon(JSONArray outerBoundaries,Element kml){
         Element coordinates =
                 new Element("coordinates", kml.getNamespace()).

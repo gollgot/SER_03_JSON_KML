@@ -1,3 +1,9 @@
+/*
+ * Auteurs: Loïc Dessaules & Gildas Houlmann
+ * Fichier: Utils.java
+ * Date: 29.05.2020
+ */
+
 import org.json.simple.JSONArray;
 
 public class Utils {

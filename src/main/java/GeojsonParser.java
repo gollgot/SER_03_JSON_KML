@@ -1,3 +1,9 @@
+/*
+ * Auteurs: Loïc Dessaules & Gildas Houlmann
+ * Fichier: GeojsonParser.java
+ * Date: 29.05.2020
+ */
+
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 

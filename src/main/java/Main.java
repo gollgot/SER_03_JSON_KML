@@ -1,3 +1,9 @@
+/*
+ * Auteurs: Loïc Dessaules & Gildas Houlmann
+ * Fichier: Main.java
+ * Date: 29.05.2020
+ */
+
 import java.util.ArrayList;
 
 public class Main {
